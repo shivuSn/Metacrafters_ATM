@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-//import "hardhat/console.sol";
-
 contract Assessment {
     address payable public owner;
     uint256 public balance;
 
     event Deposit(uint256 amount);
     event Withdraw(uint256 amount);
+    event LatteFactorCalculated(uint256 latteFactor);
+    event LatteFactorGraphData(uint256[] data);
 
     constructor(uint initBalance) payable {
         owner = payable(msg.sender);
@@ -56,5 +56,20 @@ contract Assessment {
 
         // emit the event
         emit Withdraw(_withdrawAmount);
+    }
+
+    function calculateLatteFactor(uint256 _coffeePrice, uint256 _daysPerWeek, uint256 _weeksPerYear, uint256 _yearsInvested) public {
+        uint256 yearlyCoffeeExpense = _coffeePrice * _daysPerWeek * _weeksPerYear;
+        uint256 totalInvestment = yearlyCoffeeExpense * _yearsInvested;
+        emit LatteFactorCalculated(totalInvestment);
+    }
+    function getLatteFactorOverYears(uint256 _coffeePrice, uint256 _daysPerWeek, uint256 _weeksPerYear, uint256 _yearsInvested) public {
+        uint256[] memory latteFactorData = new uint256[](5);
+        for (uint256 i = 0; i < 5; i++) {
+            uint256 yearlyCoffeeExpense = _coffeePrice * _daysPerWeek * _weeksPerYear;
+            uint256 totalInvestment = yearlyCoffeeExpense * (_yearsInvested + i);
+            latteFactorData[i] = totalInvestment;
+        }
+        emit LatteFactorGraphData(latteFactorData);
     }
 }
